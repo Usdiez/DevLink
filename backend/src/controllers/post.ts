@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { createPost, editPost, deletePost } from "../services/post";
+import { createPost, editPost, deletePost, queryPostbyFilter } from "../services/post";
 import { Post } from "../models/db";
 import { validateNewPost, validateEdit, validateDelete } from "../utils/post";
 
@@ -9,7 +9,7 @@ export const createInitialPost = async (
   next: NextFunction
 ) => {
   const { title = "", body = "" }: Post = req.body;
-  const post: Post = { title, body, postId: "", owner: [], skillsWanted: []};
+  const post: Post = { title, body, postId: "", owner: null, skillsWanted: []};
 
   // Validates request body
   try {
@@ -76,5 +76,15 @@ export const deleteExistingPost = async (
     res.send({ message: "Post deleted!" });
   } catch (error) {
     next(error);
+  }
+};
+
+export const getExistingPost = async (req: Request, res: Response, next: NextFunction) => {
+  const queryFilter = req.params.filter;
+  try {
+      const postResult: (Post[]) = await queryPostbyFilter(queryFilter);
+      res.send(postResult);
+  } catch (error) {
+      next(error);
   }
 };

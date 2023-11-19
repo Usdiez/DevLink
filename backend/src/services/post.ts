@@ -34,3 +34,24 @@ export const deletePost = async (
     throw error;
   }
 };
+
+export const queryPostbyFilter = async (
+  queryFilter: string
+): Promise<Post[] | undefined> => {
+  try {
+    // Need to figure out whether to keep a lowercase version of "SkillsWanted" inside docs for queries
+    queryFilter = queryFilter.toLowerCase();
+    
+    const doc = await db
+      .collection("Posts")
+      .where("SkillsWanted", "array-contains", `${queryFilter}`)
+      .get();
+
+    const postsData = doc.docs.map((doc) => doc.data() as Post);
+
+    return postsData;
+  } catch (error) {
+    console.log("Error getting document:", error);
+    throw error;
+  }
+};

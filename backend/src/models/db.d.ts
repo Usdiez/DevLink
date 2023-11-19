@@ -33,6 +33,6 @@ export type Post = {
   title: string;
   body: string;
   postId: string;
-  owner: DocumentReference[];
+  owner: DocumentReference;
   skillsWanted: string[];
 };
