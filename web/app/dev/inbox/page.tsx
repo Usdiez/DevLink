@@ -18,6 +18,7 @@ import {
 import { auth } from '@/firebase/clientApp';
 import { useUser } from '@context/UserContext';
 import { useRouter } from 'next/navigation';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function Inbox() {
   const router = useRouter();
