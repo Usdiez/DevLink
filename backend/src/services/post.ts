@@ -1,9 +1,7 @@
 import { db } from "../config/firebaseInit";
 import { Post } from "../models/db";
 
-export const createPost = async (
-  post: Post
-): Promise<void | undefined> => {
+export const createPost = async (post: Post): Promise<void | undefined> => {
   try {
     await db.collection("Posts").doc().create(post);
   } catch (error) {
@@ -24,9 +22,7 @@ export const editPost = async (
   }
 };
 
-export const deletePost = async (
-  postId: string
-): Promise<void | undefined> => {
+export const deletePost = async (postId: string): Promise<void | undefined> => {
   try {
     await db.collection("Posts").doc(postId).delete();
   } catch (error) {
@@ -35,23 +31,21 @@ export const deletePost = async (
   }
 };
 
-export const queryPostbyFilter = async (
-  queryFilter: string
+export const getPost = async (
+  queryFilters: string[]
 ): Promise<Post[] | undefined> => {
-  try {
-    // Need to figure out whether to keep a lowercase version of "SkillsWanted" inside docs for queries
-    queryFilter = queryFilter.toLowerCase();
-    
-    const doc = await db
-      .collection("Posts")
-      .where("SkillsWanted", "array-contains", `${queryFilter}`)
-      .get();
+  const lowercaseFilters = queryFilters.map((filter) => filter.toLowerCase());
 
-    const postsData = doc.docs.map((doc) => doc.data() as Post);
+  const doc = await db
+    .collection("Posts")
+    .where("SkillsWanted", "array-contains-any", lowercaseFilters)
+    .get();
 
-    return postsData;
-  } catch (error) {
-    console.log("Error getting document:", error);
-    throw error;
-  }
+  const additionalPostsData = doc.docs.map((doc) => doc.data() as Post);
+
+  // Assuming you already have some postsData, you can concatenate the new posts
+  const postsData: Post[] = []; // Initialize or use your existing postsData array
+  postsData.push(...additionalPostsData);
+
+  return postsData;
 };

@@ -1,5 +1,10 @@
 import express, { Router } from "express";
-import { createInitialPost, editExistingPost, deleteExistingPost, getExistingPost } from "../controllers/post";
+import {
+  createInitialPost,
+  editExistingPost,
+  deleteExistingPost,
+  getExistingPost,
+} from "../controllers/post";
 
 /**
  * @swagger
@@ -37,7 +42,7 @@ import { createInitialPost, editExistingPost, deleteExistingPost, getExistingPos
  *                 type: array
  *                 items:
  *                   type: string
- *                   description: Posts by the group 
+ *                   description: Posts by the group
  *         skillsWanted:
  *           type: array
  *           description: Wanted skills from the post
@@ -159,19 +164,19 @@ router.delete("/deletePost", deleteExistingPost);
 
 /**
  * @swagger
- * /posts/search/{filter}:
+ * /posts/search:
  *   get:
- *     summary: Get post by filter
+ *     summary: Get post(s) by filter
  *     tags:
  *      - Posts
- *     description: Retrieve a post by their filter
+ *     description: Retrieve a post(s) by their filter
  *     parameters:
  *       - in: path
  *         filter: filter
  *         schema:
- *           type: string
+ *           type: array
  *         required: true
- *         description: Filter of the post to retrieve
+ *         description: Filter(s) of the post to retrieve
  *     responses:
  *       '200':
  *         description: A single post object
@@ -185,6 +190,6 @@ router.delete("/deletePost", deleteExistingPost);
  *       '403':
  *         description: Forbidden
  */
-router.get("/search/:filter", getExistingPost);
+router.get("/search", getExistingPost);
 
 export default router;
